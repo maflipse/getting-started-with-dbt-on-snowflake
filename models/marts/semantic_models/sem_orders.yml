@@ -1,0 +1,139 @@
+semantic_models:
+- name: orders
+  description: This model consolidates order details from various sources, providing
+    a comprehensive view of each order, including customer information, order specifics,
+    and associated franchise and location data. It is useful for analyzing sales performance,
+    customer demographics, and franchise operations.
+  model: ref('orders')
+  defaults:
+    agg_time_dimension: at
+  entities:
+  - name: order
+    type: primary
+    expr: order_id
+  - name: truck
+    type: foreign
+    expr: truck_id
+  - name: customer
+    type: foreign
+    expr: customer_id
+  - name: franchise
+    type: foreign
+    expr: franchise_id
+  - name: location
+    type: foreign
+    expr: location_id
+  - name: menu_item
+    type: foreign
+    expr: menu_item_id
+  dimensions:
+  - name: at
+    description: The timestamp when the order was placed.
+    expr: order_at
+    type: time
+    type_params:
+      time_granularity: day
+  - name: truck_brand_name
+    description: The brand name of the truck.
+    type: categorical
+  - name: menu_type
+    description: The type of menu from which the order was made.
+    type: categorical
+  - name: primary_city
+    description: The primary city where the order was placed.
+    type: categorical
+  - name: region
+    description: The region where the order was placed.
+    type: categorical
+  - name: country
+    description: The country where the order was placed.
+    type: categorical
+  - name: is_franchise
+    description: Indicates whether the order was placed at a franchise location.
+    expr: franchise_flag
+    type: categorical
+  - name: franchisee_first_name
+    description: The first name of the franchisee.
+    type: categorical
+  - name: franchisee_last_name
+    description: The last name of the franchisee.
+    type: categorical
+  - name: customer_first_name
+    description: The first name of the customer.
+    expr: first_name
+    type: categorical
+  - name: customer_last_name
+    description: The last name of the customer.
+    expr: last_name
+    type: categorical
+  - name: e_mail
+    description: The email address of the customer.
+    type: categorical
+  - name: phone_number
+    description: The phone number of the customer.
+    type: categorical
+  - name: children_count
+    description: The number of children the customer has.
+    type: categorical
+  - name: gender
+    description: The gender of the customer.
+    type: categorical
+  - name: marital_status
+    description: The marital status of the customer.
+    type: categorical
+  - name: menu_item_name
+    description: The name of the menu item ordered.
+    type: categorical
+  measures:
+  - name: quantity
+    description: The quantity of the menu item ordered.
+    agg: sum
+    create_metric: true
+  - name: unit_price
+    description: The price per unit of the menu item.
+    agg: average
+    create_metric: true
+  - name: price
+    description: The total price for the quantity of the menu item ordered.
+    agg: sum
+    create_metric: true
+  - name: order_amount
+    description: The total amount of the order before tax and discounts.
+    agg: sum
+    create_metric: true
+  - name: order_tax_amount
+    description: The total tax amount for the order.
+    agg: sum
+    create_metric: true
+  - name: order_discount_amount
+    description: The total discount amount applied to the order.
+    agg: sum
+    create_metric: true
+  - name: order_total
+    description: The final total amount of the order after tax and discounts.
+    agg: sum
+    create_metric: true
+  - name: count_order
+    agg: count
+    create_metric: true
+    expr: order_id
+  - name: count_truck
+    agg: count_distinct
+    create_metric: true
+    expr: truck_id
+  - name: count_customer
+    agg: count_distinct
+    create_metric: true
+    expr: customer_id
+  - name: count_franchise
+    agg: count_distinct
+    create_metric: true
+    expr: franchise_id
+  - name: count_location
+    agg: count_distinct
+    create_metric: true
+    expr: location_id
+  - name: count_menu_item
+    agg: count_distinct
+    create_metric: true
+    expr: menu_item_id
